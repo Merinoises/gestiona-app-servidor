@@ -33,12 +33,13 @@ app.use(
   express.static(path.join(__dirname, 'public/images/optimizadas'))
 );
 
+const PORT = process.env.PORT || 3000;
 async function startServer() {
     try {
       await mongoose.connect(MONGODB_URI);
       console.log('✅ MongoDB connected - Gestiona app');
-      app.listen(3000, () => {
-        console.log('🚀 Server listening on port 3000');
+      app.listen(PORT, () => {
+        console.log(`🚀 Server listening on port ${PORT}`);
       });
     } catch (error) {
       console.error('❌ Error connecting to MongoDB', error);
