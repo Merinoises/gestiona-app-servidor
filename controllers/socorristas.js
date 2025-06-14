@@ -55,6 +55,10 @@ exports.asignarTurno = async (req, res, next) => {
     // 7) Guardamos los cambios en la base de datos
     const socorristaActualizado = await socorrista.save();
 
+    const usuarioAdmin = await Usuario.findById(req.uid);
+    console.log('Turno creado por ' + usuarioAdmin.nombre + 'para socorrista ' + socorristaActualizado.nombre + '(Piscina: ' + poolId + ')');
+
+
     // 8) Devolvemos al cliente el socorrista con el turno ya agregado
     return res.status(200).json(socorristaActualizado);
   } catch (error) {
