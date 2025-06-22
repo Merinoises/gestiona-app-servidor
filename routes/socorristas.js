@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/socorristas', socorristasController.getSocorristas);
 
-router.put('/socorrista/establecer-turno/:id', socorristasController.asignarTurno);
+router.put('/socorrista/establecer-turno/:id', validarJWT, socorristasController.asignarTurno);
 
 router.delete('/socorrista/:id/turnos/:turnoId', socorristasController.borrarTurno);
 
