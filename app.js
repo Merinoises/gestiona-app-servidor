@@ -9,6 +9,8 @@ const Usuario = require('./models/usuario');
 const authRoutes = require('./routes/auth');
 const poolRoutes = require('./routes/pool');
 const socorristasRoutes = require('./routes/socorristas');
+const versionRoutes = require('./routes/version');
+
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.use(express.json());
 app.use(authRoutes.routes);
 app.use(poolRoutes.routes);
 app.use(socorristasRoutes.routes);
+app.use(versionRoutes.routes);
 
 
 // Habilitamos CORS para evitar bloqueos de origen cruzado
