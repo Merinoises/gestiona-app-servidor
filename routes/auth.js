@@ -11,6 +11,8 @@ router.post('/login', authController.login);
 
 router.post('/crear-usuario', authController.crearUsuario);
 
-router.get('/login/renew', validarJWT, authController.renewToken)
+router.get('/login/renew', validarJWT, authController.renewToken);
+
+router.post('/fcm-token', validarJWT, authController.fcmToken);
 
 exports.routes = router;

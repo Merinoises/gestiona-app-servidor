@@ -128,8 +128,19 @@ exports.renewToken = async (req, res, next) => {
             ok: false,
             msg: 'Error del servidor'
         });
-    }
+    }}
 
+exports.fcmToken = async (req, res, next) => {
+    const userId = req.uid;
+    const { 'fcm-token': fcmToken } = req.body;
+    if (!fcmToken) return res.status(400).json({ msg: 'Firebase Cloud Messaging token requerido' });
 
+    await Usuario.findByIdAndUpdate(
+        userId,
+        {fcmToken: fcmToken},
+        {new: true}
+    );
 
+    res.json({ok: true});
 }
+

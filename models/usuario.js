@@ -22,6 +22,7 @@ const UsuarioSchema = new Schema({
     nombre: { type: String, required: true },
     password: { type: String, required: true },
     isAdmin: { type: Boolean, default: false },
+    fcmToken: {type: String, default: null},
     turnos: {
         type: [TurnoSchema],
         default: []
