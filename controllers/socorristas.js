@@ -67,20 +67,26 @@ exports.asignarTurno = async (req, res, next) => {
     }
 
     const fechaObj = socorristaActualizado.turnos.slice(-1)[0].start;
-    const dia = String(fechaObj.getUTCDate()).padStart(2, '0');
-    const mes = String(fechaObj.getUTCMonth() + 1).padStart(2, '0');
-    const anyo2 = String(fechaObj.getUTCFullYear()).slice(-2);
-    const fecha = `${dia}/${mes}/${anyo2}`;  // "25/07/25"
-
-    // 2) Extraer horas y minutos en UTC sin desfase
-    const horasInicio = String(fechaObj.getUTCHours()).padStart(2, '0');
-    const minutosInicio = String(fechaObj.getUTCMinutes()).padStart(2, '0');
-    const horaInicio = `${horasInicio}:${minutosInicio}`;  // "08:00"
-
     const fechaFinObj = socorristaActualizado.turnos.slice(-1)[0].end;
-    const horasFin = String(fechaFinObj.getUTCHours()).padStart(2, '0');
-    const minutosFin = String(fechaFinObj.getUTCMinutes()).padStart(2, '0');
-    const horaFin = `${horasFin}:${minutosFin}`; // e.g. "20:00"
+
+    // Fecha igual que antes
+    const fecha = fechaObj.toLocaleDateString('es-ES', {
+      timeZone: 'UTC',
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit'
+    });
+
+    // Hora en zona Madrid (UTC+2) para que salga “08:00” aunque Date venga en UTC
+    const optsHora = {
+      timeZone: 'Europe/Madrid',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+    const horaInicio = fechaObj.toLocaleTimeString('es-ES', optsHora); // "08:00"
+    const horaFin = fechaFinObj.toLocaleTimeString('es-ES', optsHora); // "20:00"
+
 
     // ─── Envío del push ───
     if (socorristaActualizado.fcmToken) {
@@ -125,15 +131,24 @@ exports.borrarTurno = async (req, res, next) => {
       });
     }
 
-    // 3) Formatear fecha y horas en UTC para el mensaje
+    const optsFecha = {
+      timeZone: 'Europe/Madrid',
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit'
+    };
+    const optsHora = {
+      timeZone: 'Europe/Madrid',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+
     const start = turnoObj.start;
     const end = turnoObj.end;
-    const dia = String(start.getUTCDate()).padStart(2, '0');
-    const mes = String(start.getUTCMonth() + 1).padStart(2, '0');
-    const yy = String(start.getUTCFullYear()).slice(-2);
-    const fecha = `${dia}/${mes}/${yy}`;
-    const hi = `${String(start.getUTCHours()).padStart(2, '0')}:${String(start.getUTCMinutes()).padStart(2, '0')}`;
-    const hf = `${String(end.getUTCHours()).padStart(2, '0')}:${String(end.getUTCMinutes()).padStart(2, '0')}`;
+    const fecha = start.toLocaleDateString('es-ES', optsFecha);   
+    const hi = start.toLocaleTimeString('es-ES', optsHora);     
+    const hf = end.toLocaleTimeString('es-ES', optsHora);
 
     // 4) Recuperar nombre de la piscina
     let nombrePiscina = 'piscina';
